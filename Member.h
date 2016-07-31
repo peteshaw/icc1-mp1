@@ -28,7 +28,7 @@ public:
  */
 class Address {
 public:
-	char addr[6];
+    char addr[6];
 	Address() {}
 	// Copy constructor
 	Address(const Address &anotherAddress);
@@ -39,9 +39,9 @@ public:
 		size_t pos = address.find(":");
 		int id = stoi(address.substr(0, pos));
 		short port = (short)stoi(address.substr(pos + 1, address.size()-pos-1));
-		memcpy(&addr[0], &id, sizeof(int));
-		memcpy(&addr[4], &port, sizeof(short));
-	}
+        memcpy(&addr[0], &id, sizeof(int));
+        memcpy(&addr[4], &port, sizeof(short));
+    }
 	string getAddress() {
 		int id = 0;
 		short port;

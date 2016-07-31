@@ -143,7 +143,7 @@ void Application::mp1Run() {
 		if( par->getcurrtime() == (int)(par->STEP_RATE*i) ) {
 			// introduce the ith node into the system at time STEPRATE*i
 			mp1[i]->nodeStart(JOINADDR, par->PORTNUM);
-			cout<<i<<"-th introduced node is assigned with the address: "<<mp1[i]->getMemberNode()->addr.getAddress() << endl;
+            cout << "Application::mp1run node: " << i << " address: " << mp1[i]->getMemberNode()->addr.getAddress() << endl;
 			nodeCount += i;
 		}
 

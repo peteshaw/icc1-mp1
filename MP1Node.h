@@ -20,6 +20,7 @@
  */
 #define TREMOVE 20
 #define TFAIL 5
+#define INFECTIONSNESS 3
 
 /*
  * Note: You can change/add any functions in MP1Node.{h,cpp}
@@ -31,18 +32,20 @@
 enum MessageTypes{
     JOINREQ,
     JOINREP,
-    MESSAGE_TABLE,
-    DUMMYLASTMSGTYPE
+    MEMBER_TABLE,
 };
 
 /**
- * STRUCT NAME: MessageHdr
+ * STRUCT NAME: MessageHeader
  *
  * DESCRIPTION: Header and content of a message
  */
-typedef struct Message_Header {
-	enum MsgTypes msgType;
-} messageHeader;
+typedef struct Message {
+    enum MessageTypes messageType;
+    Address address;
+    long heartbeat;
+    vector<MemberListEntry> memberList;
+} Message;
 
 /**
  * CLASS NAME: MP1Node
@@ -62,7 +65,9 @@ public:
 	Member * getMemberNode() {
 		return memberNode;
 	}
-	int recvLoop();
+    int getAddressId(Address addr);
+    short getAddressPort(Address addr);
+    int recvLoop();
 	static int enqueueWrapper(void *env, char *buff, int size);
 	void nodeStart(char *servaddrstr, short serverport);
 	int initThisNode(Address *joinaddr);
@@ -74,9 +79,15 @@ public:
 	void nodeLoopOps();
 	int isNullAddress(Address *addr);
 	Address getJoinAddress();
-	void initMemberListTable(Member *memberNode);
+    void initMemberListTable(Member *memberNode, int id, short port);
 	void printAddress(Address *addr);
 	virtual ~MP1Node();
+    void handleJoinRequest(Message *message);
+    void handleJoinReply(Message *message);
+    void handleMemberTable(Message *message);
+    void logMemberList();
+    void updateMemberList(int id, short port, long heartbeat);
+    Address makeAddress(int id, short port);
 };
 
 #endif /* _MP1NODE_H_ */
