@@ -10,65 +10,51 @@
  8.0.0.0:0 [0] APP
  9.0.0.0:0 [0] APP
  10.0.0.0:0 [0] APP
- 4.0.0.0:0 [0] initThisNode: id=4| port=0
-
  4.0.0.0:0 [0] Trying to join...
- 3.0.0.0:0 [0] initThisNode: id=3| port=0
-
  3.0.0.0:0 [0] Trying to join...
- 2.0.0.0:0 [0] initThisNode: id=2| port=0
-
  2.0.0.0:0 [0] Trying to join...
- 1.0.0.0:0 [0] initThisNode: id=1| port=0
-
  1.0.0.0:0 [0] Starting up group...
- 8.0.0.0:0 [1] initThisNode: id=8| port=0
-
  8.0.0.0:0 [1] Trying to join...
- 7.0.0.0:0 [1] initThisNode: id=7| port=0
-
  7.0.0.0:0 [1] Trying to join...
- 6.0.0.0:0 [1] initThisNode: id=6| port=0
-
  6.0.0.0:0 [1] Trying to join...
- 5.0.0.0:0 [1] initThisNode: id=5| port=0
-
  5.0.0.0:0 [1] Trying to join...
  1.0.0.0:0 [1] Node 2.0.0.0:0 joined at time 1
- 1.0.0.0:0 [1] handleJoinrequest:Sending JOINREP from 2:0to 2:0:heartbeat=0
-
  1.0.0.0:0 [1] Node 3.0.0.0:0 joined at time 1
- 1.0.0.0:0 [1] handleJoinrequest:Sending JOINREP from 3:0to 3:0:heartbeat=0
-
  1.0.0.0:0 [1] Node 4.0.0.0:0 joined at time 1
- 1.0.0.0:0 [1] handleJoinrequest:Sending JOINREP from 4:0to 4:0:heartbeat=0
-
- 10.0.0.0:0 [2] initThisNode: id=10| port=0
-
  10.0.0.0:0 [2] Trying to join...
- 9.0.0.0:0 [2] initThisNode: id=9| port=0
-
  9.0.0.0:0 [2] Trying to join...
+ 4.0.0.0:0 [2] Node 1.0.0.0:0 joined at time 2
+ 3.0.0.0:0 [2] Node 1.0.0.0:0 joined at time 2
+ 2.0.0.0:0 [2] Node 1.0.0.0:0 joined at time 2
  1.0.0.0:0 [2] Node 5.0.0.0:0 joined at time 2
- 1.0.0.0:0 [2] handleJoinrequest:Sending JOINREP from 5:0to 5:0:heartbeat=1
-
  1.0.0.0:0 [2] Node 6.0.0.0:0 joined at time 2
- 1.0.0.0:0 [2] handleJoinrequest:Sending JOINREP from 6:0to 6:0:heartbeat=1
-
  1.0.0.0:0 [2] Node 7.0.0.0:0 joined at time 2
- 1.0.0.0:0 [2] handleJoinrequest:Sending JOINREP from 7:0to 7:0:heartbeat=1
-
  1.0.0.0:0 [2] Node 8.0.0.0:0 joined at time 2
- 1.0.0.0:0 [2] handleJoinrequest:Sending JOINREP from 8:0to 8:0:heartbeat=1
-
+ 8.0.0.0:0 [3] Node 1.0.0.0:0 joined at time 3
+ 7.0.0.0:0 [3] Node 1.0.0.0:0 joined at time 3
+ 6.0.0.0:0 [3] Node 1.0.0.0:0 joined at time 3
+ 5.0.0.0:0 [3] Node 1.0.0.0:0 joined at time 3
  1.0.0.0:0 [3] Node 9.0.0.0:0 joined at time 3
- 1.0.0.0:0 [3] handleJoinrequest:Sending JOINREP from 9:0to 9:0:heartbeat=2
-
  1.0.0.0:0 [3] Node 10.0.0.0:0 joined at time 3
- 1.0.0.0:0 [3] handleJoinrequest:Sending JOINREP from 10:0to 10:0:heartbeat=2
-
- 1.0.0.0:0 [100] Node failed at time = 100
- 2.0.0.0:0 [100] Node failed at time = 100
- 3.0.0.0:0 [100] Node failed at time = 100
- 4.0.0.0:0 [100] Node failed at time = 100
- 5.0.0.0:0 [100] Node failed at time = 100
+ 10.0.0.0:0 [4] Node 1.0.0.0:0 joined at time 4
+ 9.0.0.0:0 [4] Node 1.0.0.0:0 joined at time 4
+ 1.0.0.0:0 [7] Node 2.0.0.0:0 removed at time 7
+ 1.0.0.0:0 [7] Node 3.0.0.0:0 removed at time 7
+ 1.0.0.0:0 [7] Node 4.0.0.0:0 removed at time 7
+ 4.0.0.0:0 [8] Node 1.0.0.0:0 removed at time 8
+ 3.0.0.0:0 [8] Node 1.0.0.0:0 removed at time 8
+ 2.0.0.0:0 [8] Node 1.0.0.0:0 removed at time 8
+ 1.0.0.0:0 [8] Node 5.0.0.0:0 removed at time 8
+ 1.0.0.0:0 [8] Node 6.0.0.0:0 removed at time 8
+ 1.0.0.0:0 [8] Node 7.0.0.0:0 removed at time 8
+ 1.0.0.0:0 [8] Node 8.0.0.0:0 removed at time 8
+ 8.0.0.0:0 [9] Node 1.0.0.0:0 removed at time 9
+ 7.0.0.0:0 [9] Node 1.0.0.0:0 removed at time 9
+ 6.0.0.0:0 [9] Node 1.0.0.0:0 removed at time 9
+ 5.0.0.0:0 [9] Node 1.0.0.0:0 removed at time 9
+ 1.0.0.0:0 [9] Node 9.0.0.0:0 removed at time 9
+ 1.0.0.0:0 [9] Node 10.0.0.0:0 removed at time 9
+ 10.0.0.0:0 [10] Node 1.0.0.0:0 removed at time 10
+ 9.0.0.0:0 [10] Node 1.0.0.0:0 removed at time 10
+ 9.0.0.0:0 [100] Node failed at time=100
+ 1.0.0.0:0 [500] @@time=500

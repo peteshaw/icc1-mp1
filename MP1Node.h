@@ -20,7 +20,7 @@
  */
 #define TREMOVE 20
 #define TFAIL 5
-#define INFECTIONSNESS 3
+#define INFECTIOUSNESS 3
 
 /*
  * Note: You can change/add any functions in MP1Node.{h,cpp}
@@ -85,9 +85,10 @@ public:
     void handleJoinRequest(Message *message);
     void handleJoinReply(Message *message);
     void handleMemberTable(Message *message);
-    void logMemberList();
+    void logMemberStatus();
     void updateMemberList(int id, short port, long heartbeat);
     Address makeAddress(int id, short port);
+    void sendMemberTables(int id, short port, long heartbeat);
 };
 
 #endif /* _MP1NODE_H_ */
