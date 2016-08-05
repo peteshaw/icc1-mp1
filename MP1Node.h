@@ -20,7 +20,7 @@
  */
 #define TREMOVE 20
 #define TFAIL 5
-#define INFECTIOUSNESS 3
+#define SPREAD_RATE 3
 
 /*
  * Note: You can change/add any functions in MP1Node.{h,cpp}
@@ -67,6 +67,8 @@ public:
 	}
     int getAddressId(Address addr);
     short getAddressPort(Address addr);
+    int getMyId();
+    short getMyPort();
     int recvLoop();
 	static int enqueueWrapper(void *env, char *buff, int size);
 	void nodeStart(char *servaddrstr, short serverport);
@@ -88,7 +90,7 @@ public:
     void logMemberStatus();
     void updateMemberList(int id, short port, long heartbeat);
     Address makeAddress(int id, short port);
-    void sendMemberTables(int id, short port, long heartbeat);
+    void sendMemberTables();
 };
 
 #endif /* _MP1NODE_H_ */
