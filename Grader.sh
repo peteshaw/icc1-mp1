@@ -43,6 +43,7 @@ if [ $joincount -eq 100 ]; then
 	echo "Checking Join..................10/10"
 else
 	joinfrom=`grep joined dbg.log | cut -d" " -f2 | sort -u`
+	echo "joinfrom=" joinfrom
 	cnt=0
 	for i in $joinfrom
 	do

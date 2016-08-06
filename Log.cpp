@@ -90,13 +90,14 @@ void Log::LOG(Address *addr, const char * str, ...) {
 	if(memcmp(buffer, "#STATSLOG#", 10)==0){
 		fprintf(fp2, "\n %s", stdstring);
 		fprintf(fp2, "[%d] ", par->getcurrtime());
-
-		fprintf(fp2, buffer);
+        //fprintf(fp2, buffer);
+        fputs(buffer, fp2);
 	}
 	else{
 		fprintf(fp, "\n %s", stdstring);
 		fprintf(fp, "[%d] ", par->getcurrtime());
-		fprintf(fp, buffer);
+        //fprintf(fp, buffer);
+        fputs(buffer, fp);
 
 	}
 

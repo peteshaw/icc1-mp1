@@ -100,10 +100,12 @@ void MP1Node::nodeLoopOps() {
          it != memberNode->memberList.end();) {
         // compare duration since last timestamp and timeout value
         if (par->getcurrtime() - it->timestamp > timeout) {
-            Address addr = makeAddress(it->id, it->port);
-            cout  << "Timing out " << addr.getAddress() << endl;
+            Address addr = makeAddress(it->id, it->port);            
+            logMemberStatus();
             log->logNodeRemove(&memberNode->addr, &addr);
             memberNode->memberList.erase(it);
+            cout << "timing out node " << addr.getAddress() << " from " << memberNode->addr.getAddress() << endl;
+            logMemberStatus();
         } else {
             it++;
         }
@@ -365,30 +367,22 @@ void MP1Node::initMemberListTable(Member *memberNode, int id, short port) {
     joinNode.settimestamp(par->getcurrtime());
     joinNode.setheartbeat(memberNode->heartbeat);
     memberNode->memberList.push_back(joinNode);
+    Address coordinator = makeAddress(id, port);
+
 
     //add yourself to the list
     MemberListEntry myNode = MemberListEntry(getMyId(), getMyPort());
     myNode.settimestamp(par->getcurrtime());
     myNode.setheartbeat(memberNode->heartbeat);
     memberNode->memberList.push_back(myNode);
+    Address myAddress = memberNode->addr;
+
+    //need to log the home address as joined
+    log->logNodeAdd(&myAddress,&coordinator);
 
 }
 
 
-/**
- * FUNCTION NAME: printAddress
- *
- * DESCRIPTION: Print the Address
- */
-void MP1Node::printAddress(Address *addr)
-{
-    printf("%d.%d.%d.%d:%d \n",
-           addr->addr[0],
-            addr->addr[1],
-            addr->addr[2],
-            addr->addr[3],
-            *(short*)&addr->addr[4]) ;
-}
 
 void MP1Node::handleJoinRequest(Message *mRequest) {
 
@@ -441,7 +435,7 @@ void MP1Node::handleMemberTable(Message *message) {
         updateMemberList(id, port, heartbeat);
     }
 
-    cout << "handleMemberTable from " << message->address.getAddress();
+    //cout << "handleMemberTable from " << message->address.getAddress() << endl;
 }
 
 void MP1Node::updateMemberList(int id, short port, long heartbeat)  {
@@ -479,6 +473,11 @@ void MP1Node::updateMemberList(int id, short port, long heartbeat)  {
 void MP1Node::sendMemberTables()
 {
     int sendCount = SPREAD_RATE;
+    int listSize = memberNode->memberList.size();
+
+    if (sendCount > listSize) {
+        sendCount = listSize;
+    }
 
     Message *message;
     message = new Message;
@@ -496,19 +495,25 @@ void MP1Node::sendMemberTables()
 
     size_t messageSize = sizeof(Message);
 
-    srand(time(0)); // use current time as seed for random generator
+    
+    //select n random elements
+    vector<MemberListEntry>::iterator begin = memberNode->memberList.begin();
+    size_t left = distance(begin , memberNode->memberList.end());
 
-    int listSize = memberNode->memberList.size();
+    for (int i = sendCount; i>0; i--) {
+        vector<MemberListEntry>::iterator r = memberNode->memberList.begin();
+        std::advance(r, rand()%left);
+        std::swap(*begin, *r);
+        ++begin;
+        --left;
+    }
 
-    //as long as i is less than sendCount AND the length of the array, loop through and send random tables.
-    for (int i = 1; ((i < sendCount) && (i < listSize)); i++) {
-            int rnd = rand();
-            int item = rnd % listSize;
-            MemberListEntry mleItem = memberNode->memberList[item];
+    for (int i = 1; (i <= sendCount); i++) {
+         MemberListEntry mleItem = memberNode->memberList[i];
             if((mleItem.id != getMyId())) {
                 Address destination = makeAddress(mleItem.id, mleItem.port);
                 emulNet->ENsend(&memberNode->addr, &destination, (char *)message, messageSize);
-                cout << "sending member table from " << getMyId() << ":to:" << mleItem.id << endl;
+                //cout << " sending member table from " << getMyId() << ":to:" << mleItem.id << endl;
         }
     }
 }
@@ -560,4 +565,5 @@ void MP1Node::logMemberStatus() {
     }
     cout << "]" << endl;
 }
+
 
