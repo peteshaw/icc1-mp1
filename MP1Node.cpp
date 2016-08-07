@@ -42,7 +42,7 @@ int MP1Node::initThisNode(Address *joinAddress) {
     initMemberListTable(memberNode,getAddressId(*joinAddress),getAddressPort(*joinAddress));
 
     stringstream ss;
-    cout << "initThisNode: id=" << getMyId() << "| port=" << getMyPort() << endl;
+    //cout << "initThisNode: id=" << getMyId() << "| port=" << getMyPort() << endl;
 
     return 0;
 }
@@ -90,29 +90,30 @@ bool MP1Node::recvCallBack(void *envelope, char *data, int size ) {
 void MP1Node::nodeLoopOps() {
 
     // set timeout value
-    int timeout = TFAIL;
+    int timeout = TREMOVE;
 
     //increment heartbeat
     memberNode->heartbeat += 1;
+
+
 
     //check for failed nodes and delete them
     for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin();
          it != memberNode->memberList.end();) {
         // compare duration since last timestamp and timeout value
         if (par->getcurrtime() - it->timestamp > timeout) {
-            Address addr = makeAddress(it->id, it->port);            
-            logMemberStatus();
+            Address addr = makeAddress(it->id, it->port);
             log->logNodeRemove(&memberNode->addr, &addr);
             memberNode->memberList.erase(it);
-            cout << "timing out node " << addr.getAddress() << " from " << memberNode->addr.getAddress() << endl;
-            logMemberStatus();
+            if (getMyId() == 10) {
+                //cout << "timing out node " << addr.getAddress() << " from " << memberNode->addr.getAddress() << endl;
+                logMemberStatus();
+            }
         } else {
             it++;
         }
     }
 
-    //increment the heartbeat
-    memberNode->heartbeat += 1;
 
     //now update informatino for this node
     updateMemberList(getMyId(), getMyPort(), memberNode->heartbeat);
@@ -203,7 +204,7 @@ void MP1Node::nodeStart(char *servaddrstr, short servport) {
     Address joinaddr;
     joinaddr = getJoinAddress();
 
-    cout << "nodeStart: " << this->memberNode->addr.getAddress() << " joinaddr=" << joinaddr.getAddress() << endl;
+    //cout << "nodeStart: " << this->memberNode->addr.getAddress() << " joinaddr=" << joinaddr.getAddress() << endl;
 
     // Self booting routines
     if( initThisNode(&joinaddr) == -1 ) {
@@ -262,7 +263,7 @@ int MP1Node::introduceSelfToGroup(Address *newNodeAddress) {
         // sending the join request FROM ME  (originator) to
         msg->messageType = JOINREQ;
         msg->address = memberNode->addr;
-        //cout << "introduceSelfToGroup:member address is " << memberNode->addr.getAddress() << endl;
+        ////cout << "introduceSelfToGroup:member address is " << memberNode->addr.getAddress() << endl;
         msg->heartbeat = memberNode->heartbeat;
 
 #ifdef DEBUGLOG
@@ -271,7 +272,7 @@ int MP1Node::introduceSelfToGroup(Address *newNodeAddress) {
 #endif
 
         // send JOINREQ message to introducer member
-        cout << "introduceSelfToGroup:sending Join Mesage from " << memberNode->addr.getAddress() << endl;
+        //cout << "introduceSelfToGroup:sending Join Mesage from " << memberNode->addr.getAddress() << endl;
         emulNet->ENsend(&memberNode->addr, newNodeAddress, (char *)msg, msgsize);
 
         free(msg);
@@ -293,7 +294,7 @@ void MP1Node::nodeLoop() {
         return;
     }
     //int id = *(int*)(&memberNode->addr.addr);
-    //cout << "nodeLoop for id" << id << ": inGroup=" << memberNode->inGroup << endl;
+    ////cout << "nodeLoop for id" << id << ": inGroup=" << memberNode->inGroup << endl;
 
     // Check my messages
     checkMessages();
@@ -400,10 +401,10 @@ void MP1Node::handleJoinRequest(Message *mRequest) {
 
     logMemberStatus();
 
-    cout << "handleJoinrequest:Sending JOINREP from ";
-    cout << mRequest->address.getAddress();
-    cout << "to " << memberNode->addr.getAddress();
-    cout << ":heartbeat=" << memberNode->heartbeat << endl;
+    //cout << "handleJoinrequest:Sending JOINREP from ";
+    //cout << mRequest->address.getAddress();
+    //cout << "to " << memberNode->addr.getAddress();
+    //cout << ":heartbeat=" << memberNode->heartbeat << endl;
 
     emulNet->ENsend(&memberNode->addr, &(mReply->address), (char *)mReply, msgsize);
     free(mReply);
@@ -420,12 +421,17 @@ void MP1Node::handleJoinReply(Message *message) {
     int id = getAddressId(sender);
     short port = getAddressPort(sender);
     updateMemberList(id, port, message->heartbeat);
-    cout << "handleJoinReply: reply from " << sender.getAddress() << endl;
+    //cout << "handleJoinReply: reply from " << sender.getAddress() << endl;
 }
 
 
 
 void MP1Node::handleMemberTable(Message *message) {
+
+    if (getMyId() == 10) {
+        //cout << "handleMemberTable from " << message->address.getAddress() << endl;
+    }
+
 
     vector<MemberListEntry>::iterator mlItem = message->memberList.begin();
     for (; mlItem != message->memberList.end(); ++mlItem) {
@@ -435,7 +441,7 @@ void MP1Node::handleMemberTable(Message *message) {
         updateMemberList(id, port, heartbeat);
     }
 
-    //cout << "handleMemberTable from " << message->address.getAddress() << endl;
+    ////cout << "handleMemberTable from " << message->address.getAddress() << endl;
 }
 
 void MP1Node::updateMemberList(int id, short port, long heartbeat)  {
@@ -452,7 +458,7 @@ void MP1Node::updateMemberList(int id, short port, long heartbeat)  {
                 it->setheartbeat(heartbeat);
                 it->settimestamp(par->getcurrtime());
             }
-            //cout << "updatememberlist: updating " << id << ":" << port << ":" << heartbeat << endl;
+            ////cout << "updatememberlist: updating " << id << ":" << port << ":" << heartbeat << endl;
             return;
         }
     }
@@ -463,8 +469,11 @@ void MP1Node::updateMemberList(int id, short port, long heartbeat)  {
 
     Address newMember = makeAddress(id, port);
     log->logNodeAdd(&memberNode->addr, &newMember);
+    if (getMyId() == 10) {
+        //cout << "updatememberlist: adding " << id << ":" << port << ":" << heartbeat << endl;
+    }
 
-    //cout << "updatememberlist: adding " << id << ":" << port << ":" << heartbeat << endl;
+
     logMemberStatus();
 }
 
@@ -487,8 +496,13 @@ void MP1Node::sendMemberTables()
     //copy the address - the sent message gets assigned the FROM address
     message->address = memberNode->addr;
 
-    //copy the menber list table
-    message->memberList = memberNode->memberList;
+    //copy the menber list table - but don't send items that are older than TFAIL
+    for (unsigned int i =0; i < memberNode->memberList.size(); i++) {
+         if ((memberNode->memberList[i].gettimestamp() + TFAIL) > par->getcurrtime()) {
+             message->memberList.push_back(memberNode->memberList[i]);
+         }
+    }
+
 
     //copy the heartbeat
     message->heartbeat = memberNode->heartbeat;
@@ -509,11 +523,11 @@ void MP1Node::sendMemberTables()
     }
 
     for (int i = 1; (i <= sendCount); i++) {
-         MemberListEntry mleItem = memberNode->memberList[i];
-            if((mleItem.id != getMyId())) {
-                Address destination = makeAddress(mleItem.id, mleItem.port);
-                emulNet->ENsend(&memberNode->addr, &destination, (char *)message, messageSize);
-                //cout << " sending member table from " << getMyId() << ":to:" << mleItem.id << endl;
+        MemberListEntry mleItem = memberNode->memberList[i];
+        if((mleItem.id != getMyId())) {
+            Address destination = makeAddress(mleItem.id, mleItem.port);
+            emulNet->ENsend(&memberNode->addr, &destination, (char *)message, messageSize);
+            ////cout << " sending member table from " << getMyId() << ":to:" << mleItem.id << endl;
         }
     }
 }
@@ -557,13 +571,15 @@ short MP1Node::getMyPort() {
 }
 
 void MP1Node::logMemberStatus() {
-    cout << "for node " << memberNode->addr.getAddress() << "==>" << endl;
-    cout << "heartbeat = " << memberNode->heartbeat << endl;
-    cout << "[";
-    for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin(); it != memberNode->memberList.end(); it++) {
-        cout << it->getid() << ":" << it->getheartbeat() << ":" << it->gettimestamp() << ",";
+    if (getMyId() == 10) {
+        //cout << "for node " << memberNode->addr.getAddress() << "==>" << endl;
+        //cout << "heartbeat = " << memberNode->heartbeat << endl;
+        //cout << "[";
+        for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin(); it != memberNode->memberList.end(); it++) {
+            //cout << it->getid() << ":" << it->getheartbeat() << ":" << it->gettimestamp() << ",";
+        }
+        //cout << "]" << endl;
     }
-    cout << "]" << endl;
 }
 
 
